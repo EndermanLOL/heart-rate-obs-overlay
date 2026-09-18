@@ -32,14 +32,23 @@ Apple Watch → app de iPhone que retransmite por BLE → este programa (GUI) �
 ## 📋 Requisitos
 
 - Windows 10/11 con Bluetooth LE (para leer el sensor).
-- Un iPhone con una app que retransmita la frecuencia cardiaca del Apple
-  Watch como un sensor Bluetooth estándar (**Heart Rate Service 0x180D**).
-  Algunas opciones gratuitas/conocidas:
-  - [HR Broadcast](https://apps.apple.com/app/id6766073249) (App Store)
-  - [HeartCast](https://www.heartcast.app)
-  
-  Cualquier app que exponga el estándar Bluetooth SIG *Heart Rate Service*
-  funciona; no dependas de una marca específica.
+- Un iPhone (con iOS 26+) y, opcionalmente, un Apple Watch (watchOS 11+)
+  con la app **[HeartRate Broadcaster](https://github.com/tankbottoms/HeartRateBroadcaster)**
+  instalada, que retransmite el HR del Apple Watch (y opcionalmente de unos
+  AirPods Pro 3) como un **Bluetooth LE Heart Rate Service (0x180D)**
+  estándar — exactamente lo que este programa espera leer.
+
+  Formas de instalarla en tu iPhone (elige una):
+
+  | Ruta | Costo | Requiere | Notas |
+  |------|-------|----------|-------|
+  | [App Store](https://apps.apple.com/app/id6797897649) | US$4.99 (pago único) | Nada extra | La más simple, se actualiza sola. |
+  | [TestFlight](https://testflight.apple.com/join/VUJCa5Gw) | Gratis | La app TestFlight | Beta pública, sin invitación. Cada build dura 90 días. |
+  | [Sideload (.ipa)](https://github.com/tankbottoms/HeartRateBroadcaster/releases) | Gratis | Cuenta de Apple Developer de pago | Descarga el `.ipa` del release y firma con Xcode, Sideloadly o AltStore. |
+
+  Después de instalarla, instala también la app del **Apple Watch** desde la
+  app Watch del iPhone (el reloj es el sensor, ese paso no es opcional).
+
 - Para correr desde el código fuente: Python 3.9+ y el paquete [`bleak`](https://github.com/hbldh/bleak).
 - OBS Studio (o cualquier software que soporte una fuente de tipo *Browser Source*).
 
@@ -56,8 +65,8 @@ Se abrirá la ventana de la aplicación.
 
 ## 🖥️ Uso
 
-1. En tu iPhone, abre la app que retransmite el HR de tu Apple Watch (ver
-   requisitos arriba) y deja que empiece a transmitir.
+1. En tu iPhone, abre **HeartRate Broadcaster** (ver requisitos arriba) con
+   tu Apple Watch emparejado y deja que empiece a transmitir el pulso.
 2. Abre **Heart Rate OBS Overlay** en tu PC.
 3. Ajusta **Host** (`127.0.0.1` por defecto) y **Puerto** (`8765` por
    defecto) si lo necesitas, y pulsa **Iniciar**.
@@ -160,8 +169,9 @@ heart-rate-obs-overlay/
   estándar de Python — sin frameworks externos.
 - La lectura BLE usa [`bleak`](https://github.com/hbldh/bleak), que
   implementa el estándar Bluetooth SIG *Heart Rate Measurement*
-  (característica `0x2A37`) tal como lo transmiten sensores de pecho,
-  relojes y apps de retransmisión.
+  (característica `0x2A37`) tal como lo transmite
+  [HeartRate Broadcaster](https://github.com/tankbottoms/HeartRateBroadcaster)
+  (u otro sensor/app compatible con el mismo estándar).
 - El endpoint `GET /bpm` devuelve JSON (`{"bpm": 72, "connected": true,
   "live": true, "device": "..."}`) y el overlay HTML lo consulta cada
   segundo por `fetch`.
@@ -171,8 +181,10 @@ heart-rate-obs-overlay/
 ## 🐛 Solución de problemas
 
 - **"No se encontró ningún dispositivo con Heart Rate Service"**: confirma
-  que la app en tu iPhone esté abierta y transmitiendo, que el Bluetooth
-  esté activo en ambos dispositivos, y que estén cerca uno del otro.
+  que **HeartRate Broadcaster** esté abierta en el iPhone y transmitiendo
+  (y que el Apple Watch esté emparejado y con su app también corriendo),
+  que el Bluetooth esté activo en ambos dispositivos, y que estén cerca uno
+  del otro.
 - **El overlay no carga en OBS**: verifica que la app siga corriendo
   (Iniciar) y que el puerto de la URL coincida con el configurado en la
   app.
@@ -192,10 +204,11 @@ Los *pull requests* son bienvenidos. Ideas abiertas:
 
 ## ⚖️ Aviso
 
-Este proyecto no está afiliado a Apple Inc. "Apple Watch" es una marca
-registrada de Apple Inc. Este software simplemente lee datos Bluetooth LE
-estándar (Heart Rate Service) que cualquier dispositivo o app compatible
-puede transmitir.
+Este proyecto no está afiliado a Apple Inc. ni al autor de HeartRate
+Broadcaster. "Apple Watch" es una marca registrada de Apple Inc. Este
+software simplemente lee datos Bluetooth LE estándar (Heart Rate Service
+0x180D) que **HeartRate Broadcaster** — u otra app/dispositivo compatible
+con el mismo estándar — transmite.
 
 ## 📄 Licencia
 
