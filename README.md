@@ -55,7 +55,7 @@ Apple Watch → app de iPhone que retransmite por BLE → este programa (GUI) �
 ## 🚀 Instalación (desde el código fuente)
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/heart-rate-obs-overlay.git
+git clone https://github.com/EndermanLOL/heart-rate-obs-overlay.git
 cd heart-rate-obs-overlay
 pip install -r requirements.txt
 python main.py
